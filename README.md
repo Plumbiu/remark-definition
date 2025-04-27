@@ -60,7 +60,6 @@ type TextLinkValueType =
 
 See the innput file [input.md](/test/input.md) and the output file [output.md](/test/output.md).
 
-
 ## Test
 
 run `pnpm test`
