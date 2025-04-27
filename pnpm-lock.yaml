@@ -37,8 +37,8 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0
       remark-text-link:
-        specifier: file:./src
-        version: src@file:src
+        specifier: file:./
+        version: 'file:'
       tsup:
         specifier: ^8.4.0
         version: 8.4.0(tsx@4.19.3)(typescript@5.8.3)
@@ -693,6 +693,9 @@ packages:
   remark-stringify@11.0.0:
     resolution: {integrity: sha512-1OSmLd3awB/t8qdoEOMazZkNsfVTeY4fTsgzcQFdXNq8ToTN4ZGwrMnlda4K6smTFKD+GRV6O48i6Z4iKgPPpw==}
 
+  'remark-text-link@file:':
+    resolution: {directory: '', type: directory}
+
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
@@ -726,9 +729,6 @@ packages:
 
   space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
-
-  src@file:src:
-    resolution: {directory: src, type: directory}
 
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -1486,6 +1486,10 @@ snapshots:
       mdast-util-to-markdown: 2.1.2
       unified: 11.0.5
 
+  'remark-text-link@file:':
+    dependencies:
+      unist-util-visit: 5.0.0
+
   remark@15.0.1:
     dependencies:
       '@types/mdast': 4.0.4
@@ -1539,8 +1543,6 @@ snapshots:
       whatwg-url: 7.1.0
 
   space-separated-tokens@2.0.2: {}
-
-  src@file:src: {}
 
   string-width@4.2.3:
     dependencies:
