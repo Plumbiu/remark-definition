@@ -1,0 +1,48 @@
+{
+  "name": "remark-text-link",
+  "version": "0.0.2",
+  "type": "module",
+  "description": "remark plugin to convert text to link by global config.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "esno ./test/index.ts",
+    "build": "tsup"
+  },
+  "keywords": [
+    "remark",
+    "unified",
+    "literal",
+    "plugin",
+    "markdown",
+    "link",
+    "remark-plugin"
+  ],
+  "author": "Plumbiu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Plumbiu/remark-text-link"
+  },
+  "homepage": "https://github.com/Plumbiu/remark-text-link",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/hast": "^3.0.4",
+    "@types/mdast": "^4.0.4",
+    "@types/node": "^22.15.2",
+    "rehype-stringify": "^10.0.1",
+    "remark": "^15.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "remark-stringify": "^11.0.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3",
+    "unified": "^11.0.5"
+  },
+  "dependencies": {
+    "unist-util-visit": "^5.0.0"
+  }
+}
