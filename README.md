@@ -38,6 +38,9 @@ console.log(String(file))
 // <p><a href="https://github.com/vercel/next.js">Next.js</a></p>
 ```
 
+> [!NOTE]
+> Add backward slash like `\next.js` will not be transformed.
+
 ## Option
 
 The options type `TextLinkValueType` definitions:

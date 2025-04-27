@@ -38,6 +38,9 @@ console.log(String(file))
 // <p><a href="https://github.com/vercel/next.js">Next.js</a></p>
 ```
 
+> [!NOTE]
+> 添加反斜线，例如 `\next.js` 不会被转换为链接.
+
 ## Option
 
 参数配置类型为 `TextLinkValueType`，它的定义如下:
