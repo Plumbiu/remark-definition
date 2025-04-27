@@ -5,6 +5,9 @@
   "description": "remark plugin to convert text to link by global config.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "esno ./test/index.ts",
     "build": "tsup"
