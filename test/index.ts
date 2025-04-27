@@ -4,12 +4,12 @@ import assert from 'node:assert'
 import remarkParse from 'remark-parse'
 import remarkStringify from 'remark-stringify'
 import { unified } from 'unified'
-import remarkTexLink from '../src'
+import remarkTextLink from '../src'
 
 async function run() {
   const processer = unified()
     .use(remarkParse)
-    .use(remarkTexLink, {
+    .use(remarkTextLink, {
       'next.js': {
         url: 'https://github.com/vercel/next.js',
         text: 'Next.js',

@@ -3,14 +3,14 @@ import type { Link, Text, Root, PhrasingContent } from 'mdast'
 import { visit } from 'unist-util-visit'
 import { isString } from './utils'
 
-type TextLinkValueType =
+export type TextLinkValueType =
   | string
   | ({
       text?: string
       children?: PhrasingContent[]
     } & Omit<Link, 'type' | 'position' | 'children'>)
 
-const remarkTexLink: Plugin<[Record<string, TextLinkValueType>], Root> = (
+const remarkTextLink: Plugin<[Record<string, TextLinkValueType>], Root> = (
   map,
 ) => {
   const keys = Object.keys(map)
@@ -72,4 +72,4 @@ const remarkTexLink: Plugin<[Record<string, TextLinkValueType>], Root> = (
   }
 }
 
-export default remarkTexLink
+export default remarkTextLink

@@ -19,11 +19,11 @@ import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
-import remarkTexLink from 'remark-text-link'
+import remarkTextLink from 'remark-text-link'
 
 const file = await unified()
   .use(remarkParse)
-  .use(remarkTexLink, {
+  .use(remarkTextLink, {
     // 你的配置
     'next.js': {
       url: 'https://github.com/vercel/next.js',
