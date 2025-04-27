@@ -56,23 +56,14 @@ type TextLinkValueType =
     } & Omit<Link, 'type' | 'position' | 'children'>)
 ```
 
-# Markdown example
+## Markdown example
 
-See [input.md](/test/input.md) file:
+See the innput file [input.md](/test/input.md) and the output file [output.md](/test/output.md).
 
-```markdown
-Text, Italic, strong will be transformed: next.js, _next.js_ **next.js**, ~~next.js~~, ~next.js~.
 
-Inline code, link and strikethrough will not be transformed: [next.js](https://github.com/vercel/next.js), `next.js`.
-```
+## Test
 
-The output file [output.md](/test/output.md):
-
-```markdown
-Text, Italic, strong will be transformed: [Next.js](https://github.com/vercel/next.js), _[Next.js](https://github.com/vercel/next.js)_ **[Next.js](https://github.com/vercel/next.js)**, ~~[Next.js](https://github.com/vercel/next.js)~~, ~[Next.js](https://github.com/vercel/next.js)~.
-
-Inline code, link and strikethrough will not be transformed: [next.js](https://github.com/vercel/next.js), `next.js`.
-```
+run `pnpm test`
 
 <!-- Definitions -->
 

@@ -58,21 +58,11 @@ type TextLinkValueType =
 
 # Markdown 例子
 
-见 [input.md](/test/input.md) 文件:
+查看输入 [input.md](/test/input.md) 文件和输出文件 [output.md](/test/output.md):
 
-```markdown
-Text, Italic, strong will be transformed: next.js, _next.js_ **next.js**, ~~next.js~~, ~next.js~.
+## 测试
 
-Inline code, link and strikethrough will not be transformed: [next.js](https://github.com/vercel/next.js), `next.js`.
-```
-
-输出的文件 [output.md](/test/output.md):
-
-```markdown
-Text, Italic, strong will be transformed: [Next.js](https://github.com/vercel/next.js), _[Next.js](https://github.com/vercel/next.js)_ **[Next.js](https://github.com/vercel/next.js)**, ~~[Next.js](https://github.com/vercel/next.js)~~, ~[Next.js](https://github.com/vercel/next.js)~.
-
-Inline code, link and strikethrough will not be transformed: [next.js](https://github.com/vercel/next.js), `next.js`.
-```
+运行命令 `pnpm test`
 
 <!-- Definitions -->
 

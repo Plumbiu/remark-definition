@@ -14,6 +14,12 @@ async function run() {
         url: 'https://github.com/vercel/next.js',
         text: 'Next.js',
       },
+      remark: {
+        url: 'https://github.com/remarkjs/remark',
+      },
+      rehype: {
+        url: 'https://github.com/rehypejs/rehype',
+      },
     })
     .use(remarkStringify, {
       emphasis: '_',
