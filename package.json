@@ -41,6 +41,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "remark-stringify": "^11.0.0",
+    "remark-text-link": "file:./src",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "unified": "^11.0.5"

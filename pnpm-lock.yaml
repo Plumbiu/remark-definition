@@ -36,6 +36,9 @@ importers:
       remark-stringify:
         specifier: ^11.0.0
         version: 11.0.0
+      remark-text-link:
+        specifier: file:./src
+        version: src@file:src
       tsup:
         specifier: ^8.4.0
         version: 8.4.0(tsx@4.19.3)(typescript@5.8.3)
@@ -723,6 +726,9 @@ packages:
 
   space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
+
+  src@file:src:
+    resolution: {directory: src, type: directory}
 
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -1533,6 +1539,8 @@ snapshots:
       whatwg-url: 7.1.0
 
   space-separated-tokens@2.0.2: {}
+
+  src@file:src: {}
 
   string-width@4.2.3:
     dependencies:
