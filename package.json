@@ -1,6 +1,6 @@
 {
   "name": "remark-text-link",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "description": "remark plugin to convert text to link by global config.",
   "main": "dist/index.js",
