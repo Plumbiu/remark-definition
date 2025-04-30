@@ -1,6 +1,7 @@
 import type { Plugin } from 'unified'
 import type { Link, Text, Root, PhrasingContent } from 'mdast'
 import { visit } from 'unist-util-visit'
+import { toString } from 'mdast-util-to-string'
 import { isString } from './utils'
 
 export type TextLinkValueType =
@@ -10,29 +11,67 @@ export type TextLinkValueType =
       children?: PhrasingContent[]
     } & Omit<Link, 'type' | 'position' | 'children'>)
 
-const remarkTextLink: Plugin<[Record<string, TextLinkValueType>], Root> = (
+export interface TextLinkPluginOptions {
+  /**
+   * render Text node
+   * @default true
+   */
+  renderText?: boolean
+  /**
+   * render Link node
+   * @default true
+   */
+  renderLink?: boolean
+}
+
+function h(value: TextLinkValueType): Text | Link {
+  if (isString(value)) {
+    return {
+      type: 'text',
+      value,
+    }
+  }
+  return {
+    ...value,
+    type: 'link',
+    children: value.children ?? [
+      {
+        type: 'text',
+        value: value.text!,
+      },
+    ],
+  }
+}
+
+const remarkTextLink: Plugin<
+  [Record<string, TextLinkValueType>, options?: TextLinkPluginOptions],
+  Root
+> = (
   map,
+  options = {
+    renderText: true,
+    renderLink: true,
+  },
 ) => {
-  const keys = Object.keys(map)
-  const regx = new RegExp(keys.join('|'), 'g')
+  const { renderText = true, renderLink = true } = options
+
   return (tree) => {
-    visit(tree, 'text', (node, index, parent) => {
-      if (index == null || parent == null || parent.type === 'link') {
-        return
-      }
-      const value = node.value
-      const valueData: (string | TextLinkValueType)[] = []
-      let m: RegExpExecArray | null = null
-      let lastIndex = 0
-      while ((m = regx.exec(value))) {
-        const [match] = m
-        if (match) {
-          const data: TextLinkValueType = map[match]
-          if (data) {
-            if (value[m.index - 1] === '\\') {
-              node.value =
-                node.value.slice(0, m.index - 1) + node.value.slice(m.index)
-            } else {
+    if (renderText) {
+      const keys = Object.keys(map)
+      const regx = new RegExp(keys.join('|'), 'g')
+      visit(tree, 'text', (node, index, parent) => {
+        if (index == null || parent == null || parent.type === 'link') {
+          return
+        }
+        const value = node.value
+        const valueData: (string | TextLinkValueType)[] = []
+        let m: RegExpExecArray | null = null
+        let lastIndex = 0
+        while ((m = regx.exec(value))) {
+          const [match] = m
+          if (match) {
+            const data: TextLinkValueType = map[match]
+            if (data) {
               valueData.push(node.value.slice(lastIndex, m.index))
               if (isString(data)) {
                 valueData.push({ url: data, text: match })
@@ -43,30 +82,40 @@ const remarkTextLink: Plugin<[Record<string, TextLinkValueType>], Root> = (
             }
           }
         }
-      }
-      lastIndex !== 0 && valueData.push(node.value.slice(lastIndex))
-      if (valueData.length) {
-        const children: (Text | Link)[] = valueData.map((item) => {
-          if (isString(item)) {
-            return {
-              type: 'text',
-              value: item,
+        lastIndex !== 0 && valueData.push(node.value.slice(lastIndex))
+        if (valueData.length) {
+          const children = valueData.map(h)
+          parent.children.splice(index, 1, ...children)
+        }
+      })
+    }
+    if (renderLink) {
+      visit(tree, 'link', (node) => {
+        if (node.url) {
+          return
+        }
+        const data = map[toString(node)]
+        if (data) {
+          if (isString(data)) {
+            node.url = data
+          } else {
+            node.url = data.url
+            console.log(data.children)
+            if (data.children) {
+              node.children = data.children
+            } else if (data.text) {
+              const firstChild = node.children[0]
+              if (
+                firstChild.type === 'text' ||
+                firstChild.type === 'inlineCode'
+              ) {
+                firstChild.value = data.text
+              }
             }
           }
-          return {
-            ...item,
-            type: 'link',
-            children: item.children ?? [
-              {
-                type: 'text',
-                value: item.text!,
-              },
-            ],
-          }
-        })
-        parent.children.splice(index, 1, ...children)
-      }
-    })
+        }
+      })
+    }
   }
 }
 

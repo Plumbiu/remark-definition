@@ -38,12 +38,26 @@ console.log(String(file))
 // <p><a href="https://github.com/vercel/next.js">Next.js</a></p>
 ```
 
-> [!NOTE]
-> 添加反斜线，例如 `\next.js` 不会被转换为链接.
+# 跳过文字渲染
+
+有时候你不希望文字被转换，你可以使用更安全的方式，将 `renderText` 选项设置为 `false`。
+
+```js
+await unified()
+  .use(remarkParse)
+  .use(remarkTextLink, {
+    // your config here
+    'next.js': {
+      url: 'https://github.com/vercel/next.js',
+      text: 'Next.js',
+    },
+    { renderText: false } // 配置项
+  })
+```
 
 ## Option
 
-参数配置类型为 `TextLinkValueType`，它的定义如下:
+参数配置类型为 `[TextLinkValueType, TextLinkPluginOptions]`，它的定义如下:
 
 ```js
 import type { Link, PhrasingContent } from 'mdast'
@@ -54,6 +68,18 @@ type TextLinkValueType =
       text?: string
       children?: PhrasingContent[]
     } & Omit<Link, 'type' | 'position' | 'children'>)
+interface TextLinkPluginOptions {
+  /**
+   * render Text node
+   * @default true
+   */
+  renderText?: boolean
+  /**
+   * render Link node
+   * @default true
+   */
+  renderLink?: boolean
+}
 ```
 
 # Markdown 例子

@@ -38,12 +38,26 @@ console.log(String(file))
 // <p><a href="https://github.com/vercel/next.js">Next.js</a></p>
 ```
 
-> [!NOTE]
-> Add backward slash like `\next.js` will not be transformed.
+# Skip text
+
+You might not want the text to be converted, you can use a safer options `renderText = false`.
+
+```js
+await unified()
+  .use(remarkParse)
+  .use(remarkTextLink, {
+    // your config here
+    'next.js': {
+      url: 'https://github.com/vercel/next.js',
+      text: 'Next.js',
+    },
+    { renderText: false } // options
+  })
+```
 
 ## Option
 
-The options type `TextLinkValueType` definitions:
+The options type `[TextLinkValueType, TextLinkPluginOptions]` definitions:
 
 ```js
 import type { Link, PhrasingContent } from 'mdast'
@@ -54,6 +68,18 @@ type TextLinkValueType =
       text?: string
       children?: PhrasingContent[]
     } & Omit<Link, 'type' | 'position' | 'children'>)
+interface TextLinkPluginOptions {
+  /**
+   * render Text node
+   * @default true
+   */
+  renderText?: boolean
+  /**
+   * render Link node
+   * @default true
+   */
+  renderLink?: boolean
+}
 ```
 
 ## Markdown example
