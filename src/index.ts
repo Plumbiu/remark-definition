@@ -13,11 +13,6 @@ export type DefinitionValue =
 
 export interface RemarkDefinitionPluginOptions {
   /**
-   * render Text node
-   * @default true
-   */
-  renderText?: boolean
-  /**
    * render Link node
    * @default true
    */
@@ -49,46 +44,47 @@ const remarkDefinition: Plugin<
 > = (
   map,
   options = {
-    renderText: true,
     renderLink: true,
   },
 ) => {
-  const { renderText = true, renderLink = true } = options
+  const { renderLink = true } = options
 
   return (tree) => {
-    if (renderText) {
-      const keys = Object.keys(map)
-      const regx = new RegExp(keys.join('|'), 'g')
-      visit(tree, 'text', (node, index, parent) => {
-        if (index == null || parent == null || parent.type === 'link') {
-          return
-        }
-        const value = node.value
-        const valueData: (string | DefinitionValue)[] = []
-        let m: RegExpExecArray | null = null
-        let lastIndex = 0
-        while ((m = regx.exec(value))) {
-          const [match] = m
-          if (match) {
-            const data: DefinitionValue = map[match]
-            if (data) {
-              valueData.push(node.value.slice(lastIndex, m.index))
-              if (isString(data)) {
-                valueData.push({ url: data, text: match })
-              } else {
-                valueData.push({ ...data, text: data.text ?? match })
-              }
-              lastIndex = m.index + match.length
+    const keys = Object.keys(map)
+    const regx = new RegExp(
+      keys.map((key) => `\\[${key}\\]\\[\\]`).join('|'),
+      'g',
+    )
+    visit(tree, 'text', (node, index, parent) => {
+      if (index == null || parent == null || parent.type === 'link') {
+        return
+      }
+      const value = node.value
+      const valueData: (string | DefinitionValue)[] = []
+      let m: RegExpExecArray | null = null
+      let lastIndex = 0
+      while ((m = regx.exec(value))) {
+        const [match] = m
+        if (match) {
+          const text = match.slice(1, -3)
+          const data: DefinitionValue = map[text]
+          if (data) {
+            valueData.push(node.value.slice(lastIndex, m.index))
+            if (isString(data)) {
+              valueData.push({ url: data, text: text })
+            } else {
+              valueData.push({ ...data, text: data.text ?? text })
             }
+            lastIndex = m.index + match.length
           }
         }
-        lastIndex !== 0 && valueData.push(node.value.slice(lastIndex))
-        if (valueData.length) {
-          const children = valueData.map(h)
-          parent.children.splice(index, 1, ...children)
-        }
-      })
-    }
+      }
+      lastIndex !== 0 && valueData.push(node.value.slice(lastIndex))
+      if (valueData.length) {
+        const children = valueData.map(h)
+        parent.children.splice(index, 1, ...children)
+      }
+    })
     if (renderLink) {
       visit(tree, 'link', (node) => {
         if (node.url) {

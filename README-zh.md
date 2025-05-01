@@ -32,15 +32,15 @@ const file = await unified()
   })
   .use(remarkRehype)
   .use(rehypeStringify)
-  .process('next.js')
+  .process('[next.js][]') // 或者 `[next.js]()`
 console.log(String(file))
 // 输出：
 // <p><a href="https://github.com/vercel/next.js">Next.js</a></p>
 ```
 
-# 跳过文字渲染
+# 跳过空链接
 
-有时候你不希望文字被转换，你可以使用更安全的方式，将 `renderText` 选项设置为 `false`。
+`remark-definition` 默认会转换空链接，例如 `[next.js]()`，设置 `renderLink` 为 false 去跳过链接节点.
 
 ```js
 await unified()
@@ -51,7 +51,7 @@ await unified()
       url: 'https://github.com/vercel/next.js',
       text: 'Next.js',
     },
-    { renderText: false } // 配置项
+    { renderLink: false } // 配置项
   })
 ```
 

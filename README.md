@@ -32,15 +32,15 @@ const file = await unified()
   })
   .use(remarkRehype)
   .use(rehypeStringify)
-  .process('next.js')
+  .process('[next.js][]') // or '[next.js]()'
 console.log(String(file))
 // output:
 // <p><a href="https://github.com/vercel/next.js">Next.js</a></p>
 ```
 
-# Skip text
+# Skip empty link
 
-You might not want the text to be converted, you can use a safer options `renderText = false`.
+`remark-definition` converts empty links by default, e.g. `[next.js]()`, and sets 'renderLink' to false to skip empty link nodes.
 
 ```js
 await unified()
@@ -51,7 +51,7 @@ await unified()
       url: 'https://github.com/vercel/next.js',
       text: 'Next.js',
     },
-    { renderText: false } // options
+    { renderLink: false } // options
   })
 ```
 

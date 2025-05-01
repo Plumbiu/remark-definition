@@ -37,24 +37,8 @@ async function run() {
   test('remark-definition', async () => {
     const processor = buildProcessor()
     const transformed = await processor.process(input)
+    console.log(transformed.toString())
     assert.equal(output, transformed.toString())
-  })
-
-  test('options: renderText === false', async () => {
-    const processor = buildProcessor({
-      renderText: false,
-    })
-    const transformed = await processor.process(
-      `should not transform Text node: next.js
-should transform link node: [next.js]()
-should transform link node: [\`next.js\`]()`,
-    )
-    assert.equal(
-      `should not transform Text node: next.js
-should transform link node: [Next.js](https://github.com/vercel/next.js)
-should transform link node: [\`Next.js\`](https://github.com/vercel/next.js)`,
-      transformed.toString().trim(),
-    )
   })
 
   test('options: renderLink === false', async () => {
@@ -62,14 +46,12 @@ should transform link node: [\`Next.js\`](https://github.com/vercel/next.js)`,
       renderLink: false,
     })
     const transformed = await processor.process(
-      `should not transform Text node: next.js
-should transform link node: [next.js]()
-should transform link node: [\`next.js\`]()`,
+      `should transform: [next.js][]
+should not transform link node: [next.js]()`,
     )
     assert.equal(
-      `should not transform Text node: [Next.js](https://github.com/vercel/next.js)
-should transform link node: [next.js]()
-should transform link node: [\`next.js\`]()`,
+      `should transform: [Next.js](https://github.com/vercel/next.js)
+should not transform link node: [next.js]()`,
       transformed.toString().trim(),
     )
   })
