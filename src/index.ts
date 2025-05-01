@@ -1,15 +1,15 @@
 import type { Plugin } from 'unified'
-import type { Link, Text, Root, PhrasingContent } from 'mdast'
+import type { Link, Text, Root } from 'mdast'
 import { visit } from 'unist-util-visit'
 import { toString } from 'mdast-util-to-string'
 import { isString } from './utils'
 
 export type DefinitionValue =
   | string
-  | ({
-      text?: string
-      children?: PhrasingContent[]
-    } & Omit<Link, 'type' | 'position' | 'children'>)
+  | {
+      label?: string
+      url: string
+    }
 
 export interface RemarkDefinitionPluginOptions {
   /**
@@ -26,13 +26,14 @@ function h(value: DefinitionValue): Text | Link {
       value,
     }
   }
+
   return {
-    ...value,
     type: 'link',
-    children: value.children ?? [
+    url: value.url,
+    children: [
       {
         type: 'text',
-        value: value.text!,
+        value: value.label!,
       },
     ],
   }
@@ -50,17 +51,13 @@ const remarkDefinition: Plugin<
   const { renderLink = true } = options
 
   return (tree) => {
-    const keys = Object.keys(map)
-    const regx = new RegExp(
-      keys.map((key) => `\\[${key}\\]\\[\\]`).join('|'),
-      'g',
-    )
+    const regx = new RegExp(`\\[([^\\]]+)\\]\\[\\]`, 'g')
     visit(tree, 'text', (node, index, parent) => {
       if (index == null || parent == null || parent.type === 'link') {
         return
       }
       const value = node.value
-      const valueData: (string | DefinitionValue)[] = []
+      const children: (Text | Link)[] = []
       let m: RegExpExecArray | null = null
       let lastIndex = 0
       while ((m = regx.exec(value))) {
@@ -69,19 +66,18 @@ const remarkDefinition: Plugin<
           const text = match.slice(1, -3)
           const data: DefinitionValue = map[text]
           if (data) {
-            valueData.push(node.value.slice(lastIndex, m.index))
+            children.push(h(node.value.slice(lastIndex, m.index)))
             if (isString(data)) {
-              valueData.push({ url: data, text: text })
+              children.push(h({ url: data, label: text }))
             } else {
-              valueData.push({ ...data, text: data.text ?? text })
+              children.push(h({ url: data.url, label: data.label ?? text }))
             }
             lastIndex = m.index + match.length
           }
         }
       }
-      lastIndex !== 0 && valueData.push(node.value.slice(lastIndex))
-      if (valueData.length) {
-        const children = valueData.map(h)
+      lastIndex !== 0 && children.push(h(node.value.slice(lastIndex)))
+      if (children.length) {
         parent.children.splice(index, 1, ...children)
       }
     })
@@ -96,15 +92,13 @@ const remarkDefinition: Plugin<
             node.url = data
           } else {
             node.url = data.url
-            if (data.children) {
-              node.children = data.children
-            } else if (data.text) {
+            if (data.label) {
               const firstChild = node.children[0]
               if (
                 firstChild.type === 'text' ||
                 firstChild.type === 'inlineCode'
               ) {
-                firstChild.value = data.text
+                firstChild.value = data.label
               }
             }
           }

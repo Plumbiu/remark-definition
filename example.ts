@@ -9,11 +9,11 @@ const file = await unified()
   .use(remarkDefinition, {
     'next.js': {
       url: 'https://github.com/vercel/next.js',
-      text: 'Next.js',
+      label: 'Next.js',
     },
   })
   .use(remarkRehype)
   .use(rehypeStringify)
-  .process('next.js')
+  .process('[next.js][]')
 
 console.log(String(file))

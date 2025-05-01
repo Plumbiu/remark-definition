@@ -60,20 +60,14 @@ await unified()
 The options type `[DefinitionValue, RemarkDefinitionPluginOptions]` definitions:
 
 ```js
-import type { Link, PhrasingContent } from 'mdast'
-
-type DefinitionValue =
+export type DefinitionValue =
   | string
-  | ({
-      text?: string
-      children?: PhrasingContent[]
-    } & Omit<Link, 'type' | 'position' | 'children'>)
-interface RemarkDefinitionPluginOptions {
-  /**
-   * render Text node
-   * @default true
-   */
-  renderText?: boolean
+  | {
+      label?: string
+      url: string
+    }
+
+export interface RemarkDefinitionPluginOptions {
   /**
    * render Link node
    * @default true

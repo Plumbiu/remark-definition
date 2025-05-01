@@ -15,7 +15,7 @@ async function run() {
         {
           'next.js': {
             url: 'https://github.com/vercel/next.js',
-            text: 'Next.js',
+            label: 'Next.js',
           },
           remark: {
             url: 'https://github.com/remarkjs/remark',
