@@ -1,4 +1,4 @@
-# remark-text-link
+# remark-definition
 
 [简体中文](/README-zh.md) | [English](/README.md)
 
@@ -7,7 +7,7 @@ This package is [unified][] ([remark][]) plugin to convert text to link by globa
 ## Install
 
 ```sh
-npm install remark-text-link
+npm install remark-definition
 ```
 
 ## Usage
@@ -19,11 +19,11 @@ import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
-import remarkTextLink from 'remark-text-link'
+import remarkDefinition from 'remark-definition'
 
 const file = await unified()
   .use(remarkParse)
-  .use(remarkTextLink, {
+  .use(remarkDefinition, {
     // your config here
     'next.js': {
       url: 'https://github.com/vercel/next.js',
@@ -45,7 +45,7 @@ You might not want the text to be converted, you can use a safer options `render
 ```js
 await unified()
   .use(remarkParse)
-  .use(remarkTextLink, {
+  .use(remarkDefinition, {
     // your config here
     'next.js': {
       url: 'https://github.com/vercel/next.js',
@@ -57,18 +57,18 @@ await unified()
 
 ## Option
 
-The options type `[TextLinkValueType, TextLinkPluginOptions]` definitions:
+The options type `[DefinitionValue, RemarkDefinitionPluginOptions]` definitions:
 
 ```js
 import type { Link, PhrasingContent } from 'mdast'
 
-type TextLinkValueType =
+type DefinitionValue =
   | string
   | ({
       text?: string
       children?: PhrasingContent[]
     } & Omit<Link, 'type' | 'position' | 'children'>)
-interface TextLinkPluginOptions {
+interface RemarkDefinitionPluginOptions {
   /**
    * render Text node
    * @default true

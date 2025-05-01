@@ -1,4 +1,4 @@
-# remark-text-link
+# remark-definition
 
 [简体中文](/README-zh.md) | [English](/README.md)
 
@@ -7,7 +7,7 @@
 ## 安装
 
 ```sh
-npm install remark-text-link
+npm install remark-definition
 ```
 
 ## 使用
@@ -19,11 +19,11 @@ import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
-import remarkTextLink from 'remark-text-link'
+import remarkDefinition from 'remark-definition'
 
 const file = await unified()
   .use(remarkParse)
-  .use(remarkTextLink, {
+  .use(remarkDefinition, {
     // 你的配置
     'next.js': {
       url: 'https://github.com/vercel/next.js',
@@ -45,7 +45,7 @@ console.log(String(file))
 ```js
 await unified()
   .use(remarkParse)
-  .use(remarkTextLink, {
+  .use(remarkDefinition, {
     // your config here
     'next.js': {
       url: 'https://github.com/vercel/next.js',
@@ -57,18 +57,18 @@ await unified()
 
 ## Option
 
-参数配置类型为 `[TextLinkValueType, TextLinkPluginOptions]`，它的定义如下:
+参数配置类型为 `[DefinitionValue, RemarkDefinitionPluginOptions]`，它的定义如下:
 
 ```js
 import type { Link, PhrasingContent } from 'mdast'
 
-type TextLinkValueType =
+type DefinitionValue =
   | string
   | ({
       text?: string
       children?: PhrasingContent[]
     } & Omit<Link, 'type' | 'position' | 'children'>)
-interface TextLinkPluginOptions {
+interface RemarkDefinitionPluginOptions {
   /**
    * render Text node
    * @default true

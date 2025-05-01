@@ -1,5 +1,5 @@
 {
-  "name": "remark-text-link",
+  "name": "remark-definition",
   "version": "0.1.0",
   "type": "module",
   "description": "remark plugin to convert text to link by global config.",
@@ -25,9 +25,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Plumbiu/remark-text-link"
+    "url": "git+https://github.com/Plumbiu/remark-definition"
   },
-  "homepage": "https://github.com/Plumbiu/remark-text-link",
+  "homepage": "https://github.com/Plumbiu/remark-definition",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
@@ -41,7 +41,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "remark-stringify": "^11.0.0",
-    "remark-text-link": "file:./",
+    "remark-definition": "file:./",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "unified": "^11.0.5"

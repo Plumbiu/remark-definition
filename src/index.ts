@@ -4,14 +4,14 @@ import { visit } from 'unist-util-visit'
 import { toString } from 'mdast-util-to-string'
 import { isString } from './utils'
 
-export type TextLinkValueType =
+export type DefinitionValue =
   | string
   | ({
       text?: string
       children?: PhrasingContent[]
     } & Omit<Link, 'type' | 'position' | 'children'>)
 
-export interface TextLinkPluginOptions {
+export interface RemarkDefinitionPluginOptions {
   /**
    * render Text node
    * @default true
@@ -24,7 +24,7 @@ export interface TextLinkPluginOptions {
   renderLink?: boolean
 }
 
-function h(value: TextLinkValueType): Text | Link {
+function h(value: DefinitionValue): Text | Link {
   if (isString(value)) {
     return {
       type: 'text',
@@ -43,8 +43,8 @@ function h(value: TextLinkValueType): Text | Link {
   }
 }
 
-const remarkTextLink: Plugin<
-  [Record<string, TextLinkValueType>, options?: TextLinkPluginOptions],
+const remarkDefinition: Plugin<
+  [Record<string, DefinitionValue>, options?: RemarkDefinitionPluginOptions],
   Root
 > = (
   map,
@@ -64,13 +64,13 @@ const remarkTextLink: Plugin<
           return
         }
         const value = node.value
-        const valueData: (string | TextLinkValueType)[] = []
+        const valueData: (string | DefinitionValue)[] = []
         let m: RegExpExecArray | null = null
         let lastIndex = 0
         while ((m = regx.exec(value))) {
           const [match] = m
           if (match) {
-            const data: TextLinkValueType = map[match]
+            const data: DefinitionValue = map[match]
             if (data) {
               valueData.push(node.value.slice(lastIndex, m.index))
               if (isString(data)) {
@@ -119,4 +119,4 @@ const remarkTextLink: Plugin<
   }
 }
 
-export default remarkTextLink
+export default remarkDefinition

@@ -4,14 +4,14 @@ import assert from 'node:assert'
 import remarkParse from 'remark-parse'
 import remarkStringify from 'remark-stringify'
 import { unified } from 'unified'
-import remarkTextLink, { TextLinkPluginOptions } from '../src'
+import remarkDefinition, { RemarkDefinitionPluginOptions } from '../src'
 
 async function run() {
-  const buildProcessor = (options?: TextLinkPluginOptions) => {
+  const buildProcessor = (options?: RemarkDefinitionPluginOptions) => {
     const processor = unified()
       .use(remarkParse)
       .use(
-        remarkTextLink,
+        remarkDefinition,
         {
           'next.js': {
             url: 'https://github.com/vercel/next.js',
@@ -34,7 +34,7 @@ async function run() {
 
   const input = await readFile('./test/input.md', 'utf-8')
   const output = await readFile('./test/output.md', 'utf-8')
-  test('remark-text-link', async () => {
+  test('remark-definition', async () => {
     const processor = buildProcessor()
     const transformed = await processor.process(input)
     assert.equal(output, transformed.toString())
