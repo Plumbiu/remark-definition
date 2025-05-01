@@ -96,7 +96,6 @@ const remarkDefinition: Plugin<
             node.url = data
           } else {
             node.url = data.url
-            console.log(data.children)
             if (data.children) {
               node.children = data.children
             } else if (data.text) {
