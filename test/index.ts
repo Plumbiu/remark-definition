@@ -23,6 +23,15 @@ async function run() {
           rehype: {
             url: 'https://github.com/rehypejs/rehype',
           },
+          wiki: {
+            url: 'https://zh.wikipedia.org/wiki/',
+            label(data) {
+              if (!data.pathname) {
+                return '维基百科'
+              }
+              return '维基百科 - ' + data.pathname
+            },
+          },
         },
         options,
       )
@@ -37,7 +46,7 @@ async function run() {
   test('remark-definition', async () => {
     const processor = buildProcessor()
     const transformed = await processor.process(input)
-    assert.equal(output, transformed.toString())
+    assert.equal(transformed.toString(), output)
   })
 
   test('options: renderLink === false', async () => {
@@ -49,9 +58,24 @@ async function run() {
 should not transform link node: [next.js]()`,
     )
     assert.equal(
+      transformed.toString().trim(),
       `should transform: [Next.js](https://github.com/vercel/next.js)
 should not transform link node: [next.js]()`,
+    )
+  })
+
+  test('pathname', async () => {
+    const processor = buildProcessor({
+      renderLink: false,
+    })
+    const transformed = await processor.process(
+      `[wiki][]
+[wiki][副作用_(计算机科学)]`,
+    )
+    assert.equal(
       transformed.toString().trim(),
+      `[维基百科](https://zh.wikipedia.org/wiki)
+[维基百科 - 副作用\\_(计算机科学)](https://zh.wikipedia.org/wiki/副作用_\\(计算机科学\\))`,
     )
   })
 }

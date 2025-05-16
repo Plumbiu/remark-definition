@@ -5,7 +5,13 @@ import { toString } from 'mdast-util-to-string'
 import { isString, joinUrl } from './utils'
 
 export type DefinitionObjectValue = {
-  label?: string | ((value: DefinitionObjectValue) => string)
+  label?:
+    | string
+    | ((
+        value: DefinitionObjectValue & {
+          pathname: string
+        },
+      ) => string)
   url: string
 }
 
@@ -24,7 +30,14 @@ export interface RemarkDefinitionPluginOptions {
   caseInsensitive?: boolean
 }
 
-function h(value: DefinitionValue): Text | Link {
+function renderLinkValue(value: DefinitionObjectValue, pathname = '') {
+  if (isString(value.label)) {
+    return value.label
+  }
+  return value.label!({ ...value, pathname })
+}
+
+function h(value: DefinitionValue, pathname = ''): Text | Link {
   if (isString(value)) {
     return {
       type: 'text',
@@ -38,12 +51,12 @@ function h(value: DefinitionValue): Text | Link {
     children: [
       {
         type: 'text',
-        value: isString(value.label) ? value.label : value.label!(value),
+        value: renderLinkValue(value, pathname),
       },
     ],
   }
 }
-const regx = /\[([^\]]+)\]\[([^\]]*)\]/g // new RegExp(`\\[([^\\]]+)\\]\\[()\\]`, 'g')
+const regx = /\[([^\]]+)\]\[([^\]]*)\]/g
 
 const remarkDefinition: Plugin<
   [Record<string, DefinitionValue>, options?: RemarkDefinitionPluginOptions],
@@ -75,13 +88,18 @@ const remarkDefinition: Plugin<
           if (data) {
             children.push(h(node.value.slice(lastIndex, m.index)))
             if (isString(data)) {
-              children.push(h({ url: joinUrl(data, pathname), label: text }))
+              children.push(
+                h({ url: joinUrl(data, pathname), label: text }, pathname),
+              )
             } else {
               children.push(
-                h({
-                  url: joinUrl(data.url, pathname),
-                  label: data.label ?? text,
-                }),
+                h(
+                  {
+                    url: joinUrl(data.url, pathname),
+                    label: data.label ?? text,
+                  },
+                  pathname,
+                ),
               )
             }
             lastIndex = m.index + raw.length
@@ -110,9 +128,7 @@ const remarkDefinition: Plugin<
                 firstChild.type === 'text' ||
                 firstChild.type === 'inlineCode'
               ) {
-                firstChild.value = isString(data.label)
-                  ? data.label
-                  : data.label(data)
+                firstChild.value = renderLinkValue(data)
               }
             }
           }
