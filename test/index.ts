@@ -37,7 +37,6 @@ async function run() {
   test('remark-definition', async () => {
     const processor = buildProcessor()
     const transformed = await processor.process(input)
-    console.log(transformed.toString())
     assert.equal(output, transformed.toString())
   })
 

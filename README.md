@@ -32,10 +32,10 @@ const file = await unified()
   })
   .use(remarkRehype)
   .use(rehypeStringify)
-  .process('[next.js][]') // or '[next.js]()'
+  .process('[next.js][/issues]') // empty link like '[next.js]()' do not support pathanme
 console.log(String(file))
 // output:
-// <p><a href="https://github.com/vercel/next.js">Next.js</a></p>
+// <p><a href="https://github.com/vercel/next.js/issues">Next.js</a></p>
 ```
 
 # Skip empty link
@@ -73,6 +73,11 @@ export interface RemarkDefinitionPluginOptions {
    * @default true
    */
   renderLink?: boolean
+  /**
+   * ingnore case, use lower case for map key
+   * @default true
+   */
+  caseInsensitive?: boolean
 }
 ```
 

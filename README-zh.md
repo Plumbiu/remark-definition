@@ -32,10 +32,10 @@ const file = await unified()
   })
   .use(remarkRehype)
   .use(rehypeStringify)
-  .process('[next.js][]') // 或者 `[next.js]()`
+  .process('[next.js][/issues]') // 空链接 `[next.js]()` 不支持 pathname
 console.log(String(file))
 // 输出：
-// <p><a href="https://github.com/vercel/next.js">Next.js</a></p>
+// <p><a href="https://github.com/vercel/next.js/issues">Next.js</a></p>
 ```
 
 # 跳过空链接
@@ -73,6 +73,10 @@ export interface RemarkDefinitionPluginOptions {
    * @default true
    */
   renderLink?: boolean
+  /**
+   * ingnore case, use lower case for map key
+   * @default true
+   */
 }
 ```
 

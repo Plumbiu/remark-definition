@@ -2,12 +2,12 @@ import type { Plugin } from 'unified'
 import type { Link, Text, Root } from 'mdast'
 import { visit } from 'unist-util-visit'
 import { toString } from 'mdast-util-to-string'
-import { isString } from './utils'
+import { isString, joinUrl } from './utils'
 
 export type DefinitionValue =
   | string
   | {
-      label?: string
+      label?: string | ((value: DefinitionValue) => string)
       url: string
     }
 
@@ -17,6 +17,11 @@ export interface RemarkDefinitionPluginOptions {
    * @default true
    */
   renderLink?: boolean
+  /**
+   * ingnore case, use lower case for map key
+   * @default true
+   */
+  caseInsensitive?: boolean
 }
 
 function h(value: DefinitionValue): Text | Link {
@@ -33,11 +38,12 @@ function h(value: DefinitionValue): Text | Link {
     children: [
       {
         type: 'text',
-        value: value.label!,
+        value: isString(value.label) ? value.label : value.label!(value),
       },
     ],
   }
 }
+const regx = /\[([^\]]+)\]\[([^\]]*)\]/g // new RegExp(`\\[([^\\]]+)\\]\\[()\\]`, 'g')
 
 const remarkDefinition: Plugin<
   [Record<string, DefinitionValue>, options?: RemarkDefinitionPluginOptions],
@@ -48,10 +54,9 @@ const remarkDefinition: Plugin<
     renderLink: true,
   },
 ) => {
-  const { renderLink = true } = options
+  const { renderLink = true, caseInsensitive = true } = options
 
   return (tree) => {
-    const regx = new RegExp(`\\[([^\\]]+)\\]\\[\\]`, 'g')
     visit(tree, 'text', (node, index, parent) => {
       if (index == null || parent == null || parent.type === 'link') {
         return
@@ -61,18 +66,25 @@ const remarkDefinition: Plugin<
       let m: RegExpExecArray | null = null
       let lastIndex = 0
       while ((m = regx.exec(value))) {
-        const [match] = m
-        if (match) {
-          const text = match.slice(1, -3)
-          const data: DefinitionValue = map[text]
+        const [raw, text, pathname] = m
+        if (raw) {
+          let data: DefinitionValue = map[text]
+          if (!data && !caseInsensitive) {
+            data = map[text.toLowerCase()]
+          }
           if (data) {
             children.push(h(node.value.slice(lastIndex, m.index)))
             if (isString(data)) {
-              children.push(h({ url: data, label: text }))
+              children.push(h({ url: joinUrl(data, pathname), label: text }))
             } else {
-              children.push(h({ url: data.url, label: data.label ?? text }))
+              children.push(
+                h({
+                  url: joinUrl(data.url, pathname),
+                  label: data.label ?? text,
+                }),
+              )
             }
-            lastIndex = m.index + match.length
+            lastIndex = m.index + raw.length
           }
         }
       }
@@ -98,7 +110,9 @@ const remarkDefinition: Plugin<
                 firstChild.type === 'text' ||
                 firstChild.type === 'inlineCode'
               ) {
-                firstChild.value = data.label
+                firstChild.value = isString(data.label)
+                  ? data.label
+                  : data.label(data)
               }
             }
           }

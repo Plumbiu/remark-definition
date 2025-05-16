@@ -1,6 +1,6 @@
 {
   "name": "remark-definition",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "type": "module",
   "description": "remark plugin to convert text to link by global config.",
   "main": "dist/index.js",
@@ -38,15 +38,16 @@
     "@types/node": "^22.15.2",
     "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
+    "remark-definition": "file:./",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "remark-stringify": "^11.0.0",
-    "remark-definition": "file:./",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "unified": "^11.0.5"
   },
   "dependencies": {
+    "mdast-util-to-string": "^4.0.0",
     "unist-util-visit": "^5.0.0"
   }
 }
