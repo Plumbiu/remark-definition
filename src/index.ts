@@ -4,12 +4,12 @@ import { visit } from 'unist-util-visit'
 import { toString } from 'mdast-util-to-string'
 import { isString, joinUrl } from './utils'
 
-export type DefinitionValue =
-  | string
-  | {
-      label?: string | ((value: DefinitionValue) => string)
-      url: string
-    }
+export type DefinitionObjectValue = {
+  label?: string | ((value: DefinitionObjectValue) => string)
+  url: string
+}
+
+export type DefinitionValue = string | DefinitionObjectValue
 
 export interface RemarkDefinitionPluginOptions {
   /**
